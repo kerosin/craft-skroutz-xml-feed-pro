@@ -1,0 +1,46 @@
+{
+    "name": "kerosin/craft-skroutz-xml-feed-pro",
+    "description": "Skroutz Xml Feed for Craft CMS.",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "skroutz",
+        "feed",
+        "skroutz xml feed"
+    ],
+    "support": {
+        "docs": "https://github.com/kerosin/craft-skroutz-xml-feed-pro/blob/main/README.md",
+        "issues": "https://github.com/kerosin/craft-skroutz-xml-feed-pro/issues"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "kerosin",
+            "homepage": "https://github.com/kerosin"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "kerosin\\skroutzxmlfeedpro\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Skroutz Xml Feed Pro",
+        "handle": "skroutz-xml-feed-pro",
+        "developer": "kerosin",
+        "developerUrl": "https://github.com/kerosin",
+        "documentationUrl": "https://github.com/kerosin/craft-skroutz-xml-feed-pro/blob/main/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/kerosin/craft-skroutz-xml-feed-pro/main/CHANGELOG.md",
+        "components": {
+            "skroutzXmlFeedProService": "kerosin\\skroutzxmlfeedpro\\services\\SkroutzXmlFeedProService"
+        },
+        "class": "kerosin\\skroutzxmlfeedpro\\SkroutzXmlFeedPro"
+    }
+}

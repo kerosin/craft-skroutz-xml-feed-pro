@@ -1,0 +1,28 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * @author    kerosin
+ * @copyright Copyright (c) 2021 kerosin
+ * @link      https://github.com/kerosin
+ * @package   SkroutzXmlFeedPro
+ * @since     1.0.0
+ */
+#}
+{% spaceless %}
+    <?xml version="1.0" encoding="UTF-8"?>
+    <storedata>
+        <created_at>{{ 'now'|date('Y-m-d H:i') }}</created_at>
+        <products>
+            {% for element in elements %}
+                {% set colors = craft.skroutzXmlFeedPro.elementColors(element) %}
+                {% if colors|length %}
+                    {% for color, data in colors %}
+                        {% include 'skroutz-xml-feed-pro/_includes/product' with data %}
+                    {% endfor %}
+                {% else %}
+                    {% include 'skroutz-xml-feed-pro/_includes/product' %}
+                {% endif %}
+            {% endfor %}
+        </products>
+    </storedata>
+{% endspaceless %}
