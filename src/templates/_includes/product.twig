@@ -15,10 +15,10 @@
 {% set instock = stock is defined ? stock : craft.skroutzXmlFeedPro.elementInstockFieldValue(element) %}
 {% set instock = instock ?: constant('INSTOCK_IN_STOCK', settings) %}
 
-{% if (settings.includeOutOfStockElements or craft.skroutzXmlFeedPro.isElementInStock(instock))  %}
+{% if settings.includeOutOfStockElements or craft.skroutzXmlFeedPro.isElementInStock(instock) %}
     <product>
 
-        {# id #}
+        {# uid #}
         {{ xml.element({
             tag: 'uid',
             element: element,
