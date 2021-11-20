@@ -25,6 +25,16 @@ class SkroutzXmlFeedProVariable
     // =========================================================================
 
     /**
+     * @param Element[] $elements
+     * @return void
+     * @throws Exception
+     */
+    public function generateFeed(array $elements): void
+    {
+        SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->generateFeed($elements);
+    }
+
+    /**
      * @param Element $element
      * @param string|null $field
      * @param mixed $customValue
@@ -103,15 +113,5 @@ class SkroutzXmlFeedProVariable
     public function isElementInStock(?string $value): bool
     {
         return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->isElementInStock($value);
-    }
-
-    /**
-     * @param Element[] $elements
-     * @return void
-     * @throws Exception
-     */
-    public function generateFeed(array $elements): void
-    {
-        SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->generateFeed($elements);
     }
 }

@@ -12,10 +12,11 @@
 {% import 'skroutz-xml-feed-pro/_macros/xml' as xml %}
 
 {% set isCommerceInstalled = craft.app.plugins.isPluginInstalled('commerce') %}
-{% set instock = stock is defined ? stock : craft.skroutzXmlFeedPro.elementInstockFieldValue(element) %}
+{% set variables = craft.skroutzXmlFeedPro %}
+{% set instock = stock is defined ? stock : variables.elementInstockFieldValue(element) %}
 {% set instock = instock ?: constant('INSTOCK_IN_STOCK', settings) %}
 
-{% if settings.includeOutOfStockElements or craft.skroutzXmlFeedPro.isElementInStock(instock) %}
+{% if settings.includeOutOfStockElements or variables.isElementInStock(instock) %}
     <product>
 
         {# uid #}
@@ -112,10 +113,10 @@
         }) }}
 
         {# weight #}
-        {% if isCommerceInstalled and craft.skroutzXmlFeedPro.isUseWeightUnit(settings.weightUnitField) %}
+        {% if isCommerceInstalled and variables.isUseWeightUnit(settings.weightUnitField) %}
             {% set weightUnit = craft.commerce.settings.weightUnits %}
         {% else %}
-            {% set weightUnit = craft.skroutzXmlFeedPro.elementFieldValue(
+            {% set weightUnit = variables.elementFieldValue(
                 element,
                 settings.weightUnitField,
                 settings.weightUnitCustomValue
@@ -138,10 +139,10 @@
         }) }}
 
         {# availability #}
-        {% if craft.skroutzXmlFeedPro.isUseInstock(settings.availabilityField) %}
+        {% if variables.isUseInstock(settings.availabilityField) %}
             {{ xml.element({
                 tag: 'availability',
-                value: (craft.skroutzXmlFeedPro.isElementInStock(instock)
+                value: (variables.isElementInStock(instock)
                     ? settings.availabilityInStockValue
                     : settings.availabilityOutOfStockValue)
             }) }}
