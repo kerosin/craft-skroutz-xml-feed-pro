@@ -11,6 +11,7 @@ namespace kerosin\skroutzxmlfeedpro;
 use kerosin\skroutzxmlfeedpro\services\SkroutzXmlFeedProService;
 use kerosin\skroutzxmlfeedpro\variables\SkroutzXmlFeedProVariable;
 use kerosin\skroutzxmlfeedpro\models\Settings;
+use kerosin\skroutzxmlfeedpro\web\twig\Extension;
 
 use Craft;
 use craft\base\Plugin;
@@ -77,8 +78,10 @@ class SkroutzXmlFeedPro extends Plugin
     public function init()
     {
         parent::init();
+
         self::$plugin = $this;
 
+        $this->registerTwigExtensions();
         $this->registerRoutes();
         $this->registerVariables();
     }
@@ -109,6 +112,16 @@ class SkroutzXmlFeedPro extends Plugin
                 'settings' => $this->getSettings(),
             ]
         );
+    }
+
+    /**
+     * Registers twig extensions.
+     *
+     * @return void
+     */
+    protected function registerTwigExtensions(): void
+    {
+        Craft::$app->view->registerTwigExtension(new Extension);
     }
 
     /**
