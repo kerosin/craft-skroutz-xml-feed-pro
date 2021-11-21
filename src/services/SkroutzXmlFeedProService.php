@@ -247,27 +247,29 @@ class SkroutzXmlFeedProService extends Component
 
     /**
      * @param Element $element
-     * @return string|null
+     * @return mixed
      * @throws Exception
      */
-    public function getElementInstockFieldValue(Element $element): ?string
+    public function getElementInstockFieldValue(Element $element)
     {
         $settings = SkroutzXmlFeedPro::$plugin->getSettings();
         $result = $settings::INSTOCK_IN_STOCK;
 
-        if ($settings->instockField != null) {
-            $result = $this->getElementFieldValue(
-                $element,
-                $settings->instockField,
-                $settings->instockCustomValue
-            );
-            $result = $result ?: $settings::INSTOCK_IN_STOCK;
-        } elseif (Craft::$app->getPlugins()->isPluginInstalled('commerce')) {
+        if (
+            $this->isUseStockField($settings->instockField) &&
+            Craft::$app->getPlugins()->isPluginInstalled('commerce')
+        ) {
             if ($element instanceof Product) {
                 $result = $element->getDefaultVariant()->hasStock()
                     ? $settings::INSTOCK_IN_STOCK
                     : $settings::INSTOCK_OUT_OF_STOCK;
             }
+        } elseif ($settings->instockField != null) {
+            $result = $this->getElementFieldValue(
+                $element,
+                $settings->instockField,
+                $settings->instockCustomValue
+            ) ?: $settings::INSTOCK_IN_STOCK;
         }
 
         return $result;
