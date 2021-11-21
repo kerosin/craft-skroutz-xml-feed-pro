@@ -15,14 +15,16 @@
 
 {#
 /**
- * @param string name
- * @param array options
- * @param object settings
- * @param string label
- * @param string|null instructions
+ * @param object config
  */
 #}
-{% macro customValueField(name, options, settings, label, instructions) %}
+{% macro customValueField(config) %}
+    {% set label = config.label ?? null %}
+    {% set instructions = config.instructions ?? null %}
+    {% set name = config.name ?? null %}
+    {% set options = config.options ?? [] %}
+    {% set settings = config.settings ?? {} %}
+
     {% set input %}
         <div class="flex">
             <div>
@@ -199,17 +201,17 @@
     errors: settings.getErrors('priceField')
 }) }}
 
-{{ _self.customValueField(
-    'availability',
-    [
+{{ _self.customValueField({
+    label: 'Availability'|t('skroutz-xml-feed-pro'),
+    instructions: 'The product\'s shipping availability.'|t('skroutz-xml-feed-pro'),
+    name: 'availability',
+    options: [
         {label: '', value: ''},
         {label: 'Use InStock...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_USE_INSTOCK', settings)},
         {label: 'Custom Value...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_CUSTOM_VALUE', settings)}
     ]|merge(fieldOptions),
-    settings,
-    'Availability'|t('skroutz-xml-feed-pro'),
-    'The product\'s shipping availability.'|t('skroutz-xml-feed-pro')
-) }}
+    settings: settings
+}) }}
 
 <div id="availability-field{{ constant('OPTION_USE_INSTOCK', settings) }}"{{ not craft.skroutzXmlFeedPro.isUseInstock(settings.availabilityField) ? ' class="hidden"' }}>
     {{ forms.textField({
@@ -229,13 +231,13 @@
     }) }}
 </div>
 
-{{ _self.customValueField(
-    'manufacturer',
-    customValueOptions|merge(fieldOptions),
-    settings,
-    'Manufacturer'|t('skroutz-xml-feed-pro'),
-    'The manufacturer of the product.'|t('skroutz-xml-feed-pro')
-) }}
+{{ _self.customValueField({
+    label: 'Manufacturer'|t('skroutz-xml-feed-pro'),
+    instructions: 'The manufacturer of the product.'|t('skroutz-xml-feed-pro'),
+    name: 'manufacturer',
+    options: customValueOptions|merge(fieldOptions),
+    settings: settings
+}) }}
 
 {{ forms.selectField({
     label: 'MPN / ISBN'|t('skroutz-xml-feed-pro'),
@@ -305,32 +307,32 @@
     }
 ]) %}
 
-{{ _self.customValueField(
-    'weightUnit',
-    weightUnitFieldOptions|merge(fieldOptions),
-    settings,
-    'Weight Unit'|t('skroutz-xml-feed-pro'),
-    'The product\'s weight unit.'|t('skroutz-xml-feed-pro')
-) }}
+{{ _self.customValueField({
+    label: 'Weight Unit'|t('skroutz-xml-feed-pro'),
+    instructions: 'The product\'s weight unit.'|t('skroutz-xml-feed-pro'),
+    name: 'weightUnit',
+    options: weightUnitFieldOptions|merge(fieldOptions),
+    settings: settings
+}) }}
 
-{{ _self.customValueField(
-    'instock',
-    [
+{{ _self.customValueField({
+    label: 'InStock'|t('skroutz-xml-feed-pro'),
+    instructions: 'Stock status of the product.'|t('skroutz-xml-feed-pro'),
+    name: 'instock',
+    options: [
         {label: (isCommerceInstalled ? 'Use Stock Field'|t('skroutz-xml-feed-pro') : ''), value: ''},
         {label: 'Custom Value...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_CUSTOM_VALUE', settings)}
     ]|merge(fieldOptions),
-    settings,
-    'InStock'|t('skroutz-xml-feed-pro'),
-    'Stock status of the product.'|t('skroutz-xml-feed-pro')
-) }}
+    settings: settings
+}) }}
 
-{{ _self.customValueField(
-    'shipping',
-    customValueOptions|merge(fieldOptions),
-    settings,
-    'Shipping Costs'|t('skroutz-xml-feed-pro'),
-    'The product\'s shipping cost regardless of the customer\'s location.'|t('skroutz-xml-feed-pro')
-) }}
+{{ _self.customValueField({
+    label: 'Shipping Costs'|t('skroutz-xml-feed-pro'),
+    instructions: 'The product\'s shipping cost regardless of the customer\'s location.'|t('skroutz-xml-feed-pro'),
+    name: 'shipping',
+    options: customValueOptions|merge(fieldOptions),
+    settings: settings
+}) }}
 
 {{ forms.selectField({
     label: 'Color'|t('skroutz-xml-feed-pro'),
