@@ -31,6 +31,7 @@ class Settings extends Model
     const OPTION_CUSTOM_VALUE = '__custom_value__';
     const OPTION_USE_WEIGHT_UNIT = '__use_weight_unit__';
     const OPTION_USE_INSTOCK = '__use_instock__';
+    const OPTION_USE_STOCK_FIELD = '__use_stock_field__';
 
     const INSTOCK_IN_STOCK = 'Y';
     const INSTOCK_OUT_OF_STOCK = 'N';
@@ -405,6 +406,7 @@ class Settings extends Model
                 self::OPTION_CUSTOM_VALUE,
                 self::OPTION_USE_WEIGHT_UNIT,
                 self::OPTION_USE_INSTOCK,
+                self::OPTION_USE_STOCK_FIELD,
             ],
             array_keys($this->getStandardFields()),
             array_keys($this->getCustomFields())

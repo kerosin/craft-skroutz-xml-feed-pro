@@ -571,7 +571,9 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isUseStockField(?string $value): bool
     {
-        return $value == null;
+        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
+
+        return $value == $settings::OPTION_USE_STOCK_FIELD;
     }
 
     /**

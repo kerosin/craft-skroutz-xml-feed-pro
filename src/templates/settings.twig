@@ -315,14 +315,27 @@
     settings: settings
 }) }}
 
+{% set instockFieldOptions = [{label: '', value: ''}] %}
+{% if isCommerceInstalled %}
+    {% set instockFieldOptions = instockFieldOptions|merge([
+        {
+            label: 'Use Stock Field'|t('skroutz-xml-feed-pro'),
+            value: constant('OPTION_USE_STOCK_FIELD', settings)
+        }
+    ]) %}
+{% endif %}
+{% set instockFieldOptions = instockFieldOptions|merge([
+    {
+        label: 'Custom Value...'|t('skroutz-xml-feed-pro'),
+        value: constant('OPTION_CUSTOM_VALUE', settings)
+    }
+]) %}
+
 {{ _self.customValueField({
     label: 'InStock'|t('skroutz-xml-feed-pro'),
     instructions: 'Stock status of the product.'|t('skroutz-xml-feed-pro'),
     name: 'instock',
-    options: [
-        {label: (isCommerceInstalled ? 'Use Stock Field'|t('skroutz-xml-feed-pro') : ''), value: ''},
-        {label: 'Custom Value...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_CUSTOM_VALUE', settings)}
-    ]|merge(fieldOptions),
+    options: instockFieldOptions|merge(fieldOptions),
     settings: settings
 }) }}
 
