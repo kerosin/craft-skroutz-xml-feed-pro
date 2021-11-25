@@ -1,5 +1,9 @@
 # Skroutz Xml Feed Pro Changelog
 
+## 1.1.1 - 2021-11-25
+### Changed
+- Updated options for Currency and InStock settings
+
 ## 1.1.0 - 2021-11-22
 ### Added
 - Added code improvements
