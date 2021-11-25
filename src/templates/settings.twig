@@ -87,7 +87,7 @@
         id: 'currency',
         name: 'currency',
         value: settings.currency,
-        options: settings.currencyOptions,
+        options: {'': ''}|merge(settings.currencyOptions),
         errors: settings.getErrors('currency')
     }) }}
 {% endif %}
