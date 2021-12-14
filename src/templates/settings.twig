@@ -64,381 +64,432 @@
     {label: 'Custom Value...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_CUSTOM_VALUE', settings)}
 ] %}
 
-{% if craft.app.plugins.pluginInfo('skroutz-xml-feed-pro').isTrial %}
-    <div class="warning-alert warning with-icon">
-        {{ 'This is a TRIAL version. The feed is limited to a few items.'|t('skroutz-xml-feed-pro') }}
-    </div>
-{% endif %}
+{% set settingsTabErrorKeys = [
+    'taxRate',
+    'currency',
+    'includeOutOfStockElements',
+    'appendColorToId',
+    'appendColorToName',
+    'appendColorToUrl',
+    'includeOutOfStockVariants',
+    'variantPriceType',
+] %}
+{% set filtersTabErrorKeys = [
+    'entryStatusFilter',
+    'entryTypeFilter',
+    'entryCategoryFilter',
+    'productStatusFilter',
+    'productTypeFilter',
+    'productCategoryFilter',
+    'productAvailableForPurchaseFilter',
+] %}
+{% set errors = settings.getErrors()|keys %}
 
-<h2>{{ 'General'|t('skroutz-xml-feed-pro') }}</h2>
-
-{{ forms.textField({
-    label: 'Tax Rate'|t('skroutz-xml-feed-pro'),
-    instructions: 'Tax rate as a percentage of the product price.'|t('skroutz-xml-feed-pro'),
-    id: 'taxRate',
-    name: 'taxRate',
-    value: settings.taxRate,
-    errors: settings.getErrors('taxRate')
-}) }}
-
-{% if isCommerceInstalled %}
-    {{ forms.selectField({
-        label: 'Currency'|t('skroutz-xml-feed-pro'),
-        id: 'currency',
-        name: 'currency',
-        value: settings.currency,
-        options: {'': ''}|merge(settings.currencyOptions),
-        errors: settings.getErrors('currency')
-    }) }}
-{% endif %}
-
-{{ forms.lightswitchField({
-    label: 'Include Out of Stock Products'|t('skroutz-xml-feed-pro'),
-    id: 'includeOutOfStockElements',
-    name: 'includeOutOfStockElements',
-    on: settings.includeOutOfStockElements,
-    errors: settings.getErrors('includeOutOfStockElements')
-}) }}
-
-{{ forms.lightswitchField({
-    label: 'Append Color to ID'|t('skroutz-xml-feed-pro'),
-    id: 'appendColorToId',
-    name: 'appendColorToId',
-    on: settings.appendColorToId,
-    errors: settings.getErrors('appendColorToId')
-}) }}
-
-{{ forms.lightswitchField({
-    label: 'Append Color to Name'|t('skroutz-xml-feed-pro'),
-    id: 'appendColorToName',
-    name: 'appendColorToName',
-    on: settings.appendColorToName,
-    errors: settings.getErrors('appendColorToName')
-}) }}
-
-{{ forms.lightswitchField({
-    label: 'Append Color to Url'|t('skroutz-xml-feed-pro'),
-    id: 'appendColorToUrl',
-    name: 'appendColorToUrl',
-    on: settings.appendColorToUrl,
-    errors: settings.getErrors('appendColorToUrl')
-}) }}
-
-{% if isCommerceInstalled %}
-    <h3>{{ 'Variants'|t('skroutz-xml-feed-pro') }}</h3>
-
-    {{ forms.lightswitchField({
-        label: 'Include Out of Stock Variants'|t('skroutz-xml-feed-pro'),
-        id: 'includeOutOfStockVariants',
-        name: 'includeOutOfStockVariants',
-        on: settings.includeOutOfStockVariants,
-        errors: settings.getErrors('includeOutOfStockVariants')
-    }) }}
-
-    {{ forms.selectField({
-        label: 'Price Type for Variants'|t('skroutz-xml-feed-pro'),
-        id: 'variantPriceType',
-        name: 'variantPriceType',
-        value: settings.variantPriceType,
-        options: settings.variantPriceTypeOptions,
-        errors: settings.getErrors('variantPriceType')
-    }) }}
-{% endif %}
-
-<hr>
-
-<h2>{{ 'Fields Mapping'|t('skroutz-xml-feed-pro') }}</h2>
-
-<h3>{{ 'Required Fields'|t('skroutz-xml-feed-pro') }}</h3>
-
-{{ forms.selectField({
-    label: 'Unique ID'|t('skroutz-xml-feed-pro'),
-    instructions: 'This attribute represents the unique identifier of a product. The value of this field must remain the same through a product\'s lifecycle and cannot be reused in other products.'|t('skroutz-xml-feed-pro'),
-    id: 'uidField',
-    name: 'uidField',
-    value: settings.uidField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('uidField')
-}) }}
-
-{{ forms.selectField({
-    label: 'Name'|t('skroutz-xml-feed-pro'),
-    instructions: 'The title of the product.'|t('skroutz-xml-feed-pro'),
-    id: 'nameField',
-    name: 'nameField',
-    value: settings.nameField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('nameField')
-}) }}
-
-{{ forms.selectField({
-    label: 'Image Link'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s image.'|t('skroutz-xml-feed-pro'),
-    id: 'imageField',
-    name: 'imageField',
-    value: settings.imageField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('imageField')
-}) }}
-
-{{ forms.selectField({
-    label: 'Category Name'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s category path. It is essential that this attribute includes the full path of the product\'s category.'|t('skroutz-xml-feed-pro'),
-    id: 'categoryField',
-    name: 'categoryField',
-    value: settings.categoryField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('categoryField')
-}) }}
-
-{{ forms.selectField({
-    label: 'Price'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s retail price including V.A.T.'|t('skroutz-xml-feed-pro'),
-    id: 'priceField',
-    name: 'priceField',
-    value: settings.priceField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('priceField')
-}) }}
-
-{{ _self.customValueField({
-    label: 'Availability'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s shipping availability.'|t('skroutz-xml-feed-pro'),
-    name: 'availability',
-    options: [
-        {label: '', value: ''},
-        {label: 'Use InStock...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_USE_INSTOCK', settings)},
-        {label: 'Custom Value...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_CUSTOM_VALUE', settings)}
-    ]|merge(fieldOptions),
-    settings: settings
-}) }}
-
-<div id="availability-field{{ constant('OPTION_USE_INSTOCK', settings) }}"{{ not craft.skroutzXmlFeedPro.isUseInstock(settings.availabilityField) ? ' class="hidden"' }}>
-    {{ forms.textField({
-        label: 'Availability for In Stock Products'|t('skroutz-xml-feed-pro'),
-        id: 'availabilityInStockValue',
-        name: 'availabilityInStockValue',
-        value: settings.availabilityInStockValue,
-        errors: settings.getErrors('availabilityInStockValue')
-    }) }}
-
-    {{ forms.textField({
-        label: 'Availability for Out of Stock Products'|t('skroutz-xml-feed-pro'),
-        id: 'availabilityOutOfStockValue',
-        name: 'availabilityOutOfStockValue',
-        value: settings.availabilityOutOfStockValue,
-        errors: settings.getErrors('availabilityOutOfStockValue')
-    }) }}
-</div>
-
-{{ _self.customValueField({
-    label: 'Manufacturer'|t('skroutz-xml-feed-pro'),
-    instructions: 'The manufacturer of the product.'|t('skroutz-xml-feed-pro'),
-    name: 'manufacturer',
-    options: customValueOptions|merge(fieldOptions),
-    settings: settings
-}) }}
-
-{{ forms.selectField({
-    label: 'MPN / ISBN'|t('skroutz-xml-feed-pro'),
-    instructions: 'The unique manufacturer identifier of the product. It is used to identify a product and classify it.'|t('skroutz-xml-feed-pro'),
-    id: 'mpnField',
-    name: 'mpnField',
-    value: settings.mpnField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('mpnField')
-}) }}
-
-<h3>{{ 'Optional Fields'|t('skroutz-xml-feed-pro') }}</h3>
-
-{{ forms.selectField({
-    label: 'Additional Image Link'|t('skroutz-xml-feed-pro'),
-    instructions: 'It is used for additional photographs of the product. This field is optional but recommended, except for fashion categories where additional images are required.'|t('skroutz-xml-feed-pro'),
-    id: 'additionalImageField',
-    name: 'additionalImageField',
-    value: settings.additionalImageField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('additionalImageField')
-}) }}
-
-{{ forms.selectField({
-    label: 'EAN / Barcode'|t('skroutz-xml-feed-pro'),
-    instructions: 'The international article number (EAN) used for the identification of the product.'|t('skroutz-xml-feed-pro'),
-    id: 'eanField',
-    name: 'eanField',
-    value: settings.eanField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('eanField')
-}) }}
-
-{{ forms.selectField({
-    label: 'Size'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s size. Required by all fashion items with sizes.'|t('skroutz-xml-feed-pro'),
-    id: 'sizeField',
-    name: 'sizeField',
-    value: settings.sizeField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('sizeField')
-}) }}
-
-{{ forms.selectField({
-    label: 'Weight'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s weight used to calculate shipping costs. Required by all shops that use weight in shipping cost rules.'|t('skroutz-xml-feed-pro'),
-    id: 'weightField',
-    name: 'weightField',
-    value: settings.weightField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('weightField')
-}) }}
-
-{% set weightUnitFieldOptions = [{label: '', value: ''}] %}
-{% if isCommerceInstalled %}
-    {% set weightUnitFieldOptions = weightUnitFieldOptions|merge([
-        {
-            label: 'Use Weight Unit'|t('skroutz-xml-feed-pro'),
-            value: constant('OPTION_USE_WEIGHT_UNIT', settings)
-        }
-    ]) %}
-{% endif %}
-{% set weightUnitFieldOptions = weightUnitFieldOptions|merge([
+{% set tabs = [
     {
-        label: 'Custom Value...'|t('skroutz-xml-feed-pro'),
-        value: constant('OPTION_CUSTOM_VALUE', settings)
-    }
-]) %}
-
-{{ _self.customValueField({
-    label: 'Weight Unit'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s weight unit.'|t('skroutz-xml-feed-pro'),
-    name: 'weightUnit',
-    options: weightUnitFieldOptions|merge(fieldOptions),
-    settings: settings
-}) }}
-
-{% set instockFieldOptions = [{label: '', value: ''}] %}
-{% if isCommerceInstalled %}
-    {% set instockFieldOptions = instockFieldOptions|merge([
-        {
-            label: 'Use Stock Field'|t('skroutz-xml-feed-pro'),
-            value: constant('OPTION_USE_STOCK_FIELD', settings)
-        }
-    ]) %}
-{% endif %}
-{% set instockFieldOptions = instockFieldOptions|merge([
+        label: 'Mapping'|t('skroutz-xml-feed-pro'),
+        url: '#settings-tab-mapping',
+        class: errors|diff(settingsTabErrorKeys, filtersTabErrorKeys)|length ? 'error' : ''
+    },
     {
-        label: 'Custom Value...'|t('skroutz-xml-feed-pro'),
-        value: constant('OPTION_CUSTOM_VALUE', settings)
+        label: 'Settings'|t('skroutz-xml-feed-pro'),
+        url: '#settings-tab-settings',
+        class: errors|intersect(settingsTabErrorKeys)|length ? 'error' : ''
+    },
+    {
+        label: 'Filters'|t('skroutz-xml-feed-pro'),
+        url: '#settings-tab-filters',
+        class: errors|intersect(filtersTabErrorKeys)|length ? 'error' : ''
     }
-]) %}
+] %}
 
-{{ _self.customValueField({
-    label: 'InStock'|t('skroutz-xml-feed-pro'),
-    instructions: 'Stock status of the product.'|t('skroutz-xml-feed-pro'),
-    name: 'instock',
-    options: instockFieldOptions|merge(fieldOptions),
-    settings: settings
-}) }}
+<header id="content-header" class="pane-header">
+    {% include '_includes/tabs' with {
+        containerAttributes: {
+            id: 'tabs'
+        }
+    } %}
+</header>
 
-{{ _self.customValueField({
-    label: 'Shipping Costs'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product\'s shipping cost regardless of the customer\'s location.'|t('skroutz-xml-feed-pro'),
-    name: 'shipping',
-    options: customValueOptions|merge(fieldOptions),
-    settings: settings
-}) }}
+{% namespace 'settings' %}
+    <div id="tab-mapping">
 
-{{ forms.selectField({
-    label: 'Color'|t('skroutz-xml-feed-pro'),
-    instructions: 'The color of the product.'|t('skroutz-xml-feed-pro'),
-    id: 'colorField',
-    name: 'colorField',
-    value: settings.colorField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('colorField')
-}) }}
+        {% if craft.app.plugins.pluginInfo('skroutz-xml-feed-pro').isTrial %}
+            <div class="warning-alert warning with-icon">
+                {{ 'This is a TRIAL version. The feed is limited to a few items.'|t('skroutz-xml-feed-pro') }}
+            </div>
+        {% endif %}
 
-{{ forms.selectField({
-    label: 'Description'|t('skroutz-xml-feed-pro'),
-    instructions: 'The product description should explain what a product is and why it\'s worth purchasing.'|t('skroutz-xml-feed-pro'),
-    id: 'descriptionField',
-    name: 'descriptionField',
-    value: settings.descriptionField,
-    options: {'': ''}|merge(fieldOptions),
-    errors: settings.getErrors('descriptionField')
-}) }}
+        <h2>{{ 'Required Fields'|t('skroutz-xml-feed-pro') }}</h2>
 
-<hr>
-
-<h2>{{ 'Filters'|t('skroutz-xml-feed-pro') }}</h2>
-
-<h3>{{ 'Entries'|t('skroutz-xml-feed-pro') }}</h3>
-
-{{ forms.checkboxGroupField({
-    label: 'Status'|t('skroutz-xml-feed-pro'),
-    id: 'entryStatusFilter',
-    name: 'entryStatusFilter',
-    values: settings.entryStatusFilter,
-    options: settings.statusFilterOptions,
-    errors: settings.getErrors('entryStatusFilter')
-}) }}
-
-{% if settings.entryTypeFilterOptions|length %}
-    {{ forms.checkboxGroupField({
-        label: 'Type'|t('skroutz-xml-feed-pro'),
-        id: 'entryTypeFilter',
-        name: 'entryTypeFilter',
-        values: settings.entryTypeFilter,
-        options: settings.entryTypeFilterOptions,
-        errors: settings.getErrors('entryTypeFilter')
-    }) }}
-{% endif %}
-
-{{ forms.elementSelectField({
-    label: 'Category'|t('skroutz-xml-feed-pro'),
-    id: 'entryCategoryFilter',
-    name: 'entryCategoryFilter',
-    elements: (settings.entryCategoryFilter|length ? craft.categories.id(settings.entryCategoryFilter).all() : []),
-    elementType: 'craft\\elements\\Category',
-    errors: settings.getErrors('entryCategoryFilter'),
-}) }}
-
-{% if isCommerceInstalled %}
-    <h3>{{ 'Products'|t('skroutz-xml-feed-pro') }}</h3>
-
-    {{ forms.checkboxGroupField({
-        label: 'Status'|t('skroutz-xml-feed-pro'),
-        id: 'productStatusFilter',
-        name: 'productStatusFilter',
-        values: settings.productStatusFilter,
-        options: settings.statusFilterOptions,
-        errors: settings.getErrors('productStatusFilter')
-    }) }}
-
-    {% if settings.productTypeFilterOptions|length %}
-        {{ forms.checkboxGroupField({
-            label: 'Type'|t('skroutz-xml-feed-pro'),
-            id: 'productTypeFilter',
-            name: 'productTypeFilter',
-            values: settings.productTypeFilter,
-            options: settings.productTypeFilterOptions,
-            errors: settings.getErrors('productTypeFilter')
+        {{ forms.selectField({
+            label: 'Unique ID'|t('skroutz-xml-feed-pro'),
+            instructions: 'This attribute represents the unique identifier of a product. The value of this field must remain the same through a product\'s lifecycle and cannot be reused in other products.'|t('skroutz-xml-feed-pro'),
+            id: 'uidField',
+            name: 'uidField',
+            value: settings.uidField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('uidField')
         }) }}
-    {% endif %}
 
-    {{ forms.elementSelectField({
-        label: 'Category'|t('skroutz-xml-feed-pro'),
-        id: 'productCategoryFilter',
-        name: 'productCategoryFilter',
-        elements: (settings.productCategoryFilter|length ? craft.categories.id(settings.productCategoryFilter).all() : []),
-        elementType: 'craft\\elements\\Category',
-        errors: settings.getErrors('productCategoryFilter'),
-    }) }}
+        {{ forms.selectField({
+            label: 'Name'|t('skroutz-xml-feed-pro'),
+            instructions: 'The title of the product.'|t('skroutz-xml-feed-pro'),
+            id: 'nameField',
+            name: 'nameField',
+            value: settings.nameField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('nameField')
+        }) }}
 
-    {{ forms.checkboxField({
-        label: 'Available for Purcahse'|t('skroutz-xml-feed-pro'),
-        id: 'productAvailableForPurchaseFilter',
-        name: 'productAvailableForPurchaseFilter',
-        checked: settings.productAvailableForPurchaseFilter,
-        errors: settings.getErrors('productAvailableForPurchaseFilter')
-    }) }}
-{% endif %}
+        {{ forms.selectField({
+            label: 'Image Link'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s image.'|t('skroutz-xml-feed-pro'),
+            id: 'imageField',
+            name: 'imageField',
+            value: settings.imageField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('imageField')
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Category Name'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s category path. It is essential that this attribute includes the full path of the product\'s category.'|t('skroutz-xml-feed-pro'),
+            id: 'categoryField',
+            name: 'categoryField',
+            value: settings.categoryField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('categoryField')
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Price'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s retail price including V.A.T.'|t('skroutz-xml-feed-pro'),
+            id: 'priceField',
+            name: 'priceField',
+            value: settings.priceField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('priceField')
+        }) }}
+
+        {{ _self.customValueField({
+            label: 'Availability'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s shipping availability.'|t('skroutz-xml-feed-pro'),
+            name: 'availability',
+            options: [
+                {label: '', value: ''},
+                {label: 'Use InStock...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_USE_INSTOCK', settings)},
+                {label: 'Custom Value...'|t('skroutz-xml-feed-pro'), value: constant('OPTION_CUSTOM_VALUE', settings)}
+            ]|merge(fieldOptions),
+            settings: settings
+        }) }}
+
+        <div id="availability-field{{ constant('OPTION_USE_INSTOCK', settings) }}"{{ not craft.skroutzXmlFeedPro.isUseInstock(settings.availabilityField) ? ' class="hidden"' }}>
+            {{ forms.textField({
+                label: 'Availability for In Stock Products'|t('skroutz-xml-feed-pro'),
+                id: 'availabilityInStockValue',
+                name: 'availabilityInStockValue',
+                value: settings.availabilityInStockValue,
+                errors: settings.getErrors('availabilityInStockValue')
+            }) }}
+
+            {{ forms.textField({
+                label: 'Availability for Out of Stock Products'|t('skroutz-xml-feed-pro'),
+                id: 'availabilityOutOfStockValue',
+                name: 'availabilityOutOfStockValue',
+                value: settings.availabilityOutOfStockValue,
+                errors: settings.getErrors('availabilityOutOfStockValue')
+            }) }}
+        </div>
+
+        {{ _self.customValueField({
+            label: 'Manufacturer'|t('skroutz-xml-feed-pro'),
+            instructions: 'The manufacturer of the product.'|t('skroutz-xml-feed-pro'),
+            name: 'manufacturer',
+            options: customValueOptions|merge(fieldOptions),
+            settings: settings
+        }) }}
+
+        {{ forms.selectField({
+            label: 'MPN / ISBN'|t('skroutz-xml-feed-pro'),
+            instructions: 'The unique manufacturer identifier of the product. It is used to identify a product and classify it.'|t('skroutz-xml-feed-pro'),
+            id: 'mpnField',
+            name: 'mpnField',
+            value: settings.mpnField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('mpnField')
+        }) }}
+
+        <h2>{{ 'Optional Fields'|t('skroutz-xml-feed-pro') }}</h2>
+
+        {{ forms.selectField({
+            label: 'Additional Image Link'|t('skroutz-xml-feed-pro'),
+            instructions: 'It is used for additional photographs of the product. This field is optional but recommended, except for fashion categories where additional images are required.'|t('skroutz-xml-feed-pro'),
+            id: 'additionalImageField',
+            name: 'additionalImageField',
+            value: settings.additionalImageField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('additionalImageField')
+        }) }}
+
+        {{ forms.selectField({
+            label: 'EAN / Barcode'|t('skroutz-xml-feed-pro'),
+            instructions: 'The international article number (EAN) used for the identification of the product.'|t('skroutz-xml-feed-pro'),
+            id: 'eanField',
+            name: 'eanField',
+            value: settings.eanField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('eanField')
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Size'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s size. Required by all fashion items with sizes.'|t('skroutz-xml-feed-pro'),
+            id: 'sizeField',
+            name: 'sizeField',
+            value: settings.sizeField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('sizeField')
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Weight'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s weight used to calculate shipping costs. Required by all shops that use weight in shipping cost rules.'|t('skroutz-xml-feed-pro'),
+            id: 'weightField',
+            name: 'weightField',
+            value: settings.weightField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('weightField')
+        }) }}
+
+        {% set weightUnitFieldOptions = [{label: '', value: ''}] %}
+        {% if isCommerceInstalled %}
+            {% set weightUnitFieldOptions = weightUnitFieldOptions|merge([
+                {
+                    label: 'Use Weight Unit'|t('skroutz-xml-feed-pro'),
+                    value: constant('OPTION_USE_WEIGHT_UNIT', settings)
+                }
+            ]) %}
+        {% endif %}
+        {% set weightUnitFieldOptions = weightUnitFieldOptions|merge([
+            {
+                label: 'Custom Value...'|t('skroutz-xml-feed-pro'),
+                value: constant('OPTION_CUSTOM_VALUE', settings)
+            }
+        ]) %}
+
+        {{ _self.customValueField({
+            label: 'Weight Unit'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s weight unit.'|t('skroutz-xml-feed-pro'),
+            name: 'weightUnit',
+            options: weightUnitFieldOptions|merge(fieldOptions),
+            settings: settings
+        }) }}
+
+        {% set instockFieldOptions = [{label: '', value: ''}] %}
+        {% if isCommerceInstalled %}
+            {% set instockFieldOptions = instockFieldOptions|merge([
+                {
+                    label: 'Use Stock Field'|t('skroutz-xml-feed-pro'),
+                    value: constant('OPTION_USE_STOCK_FIELD', settings)
+                }
+            ]) %}
+        {% endif %}
+        {% set instockFieldOptions = instockFieldOptions|merge([
+            {
+                label: 'Custom Value...'|t('skroutz-xml-feed-pro'),
+                value: constant('OPTION_CUSTOM_VALUE', settings)
+            }
+        ]) %}
+
+        {{ _self.customValueField({
+            label: 'InStock'|t('skroutz-xml-feed-pro'),
+            instructions: 'Stock status of the product.'|t('skroutz-xml-feed-pro'),
+            name: 'instock',
+            options: instockFieldOptions|merge(fieldOptions),
+            settings: settings
+        }) }}
+
+        {{ _self.customValueField({
+            label: 'Shipping Costs'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product\'s shipping cost regardless of the customer\'s location.'|t('skroutz-xml-feed-pro'),
+            name: 'shipping',
+            options: customValueOptions|merge(fieldOptions),
+            settings: settings
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Color'|t('skroutz-xml-feed-pro'),
+            instructions: 'The color of the product.'|t('skroutz-xml-feed-pro'),
+            id: 'colorField',
+            name: 'colorField',
+            value: settings.colorField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('colorField')
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Description'|t('skroutz-xml-feed-pro'),
+            instructions: 'The product description should explain what a product is and why it\'s worth purchasing.'|t('skroutz-xml-feed-pro'),
+            id: 'descriptionField',
+            name: 'descriptionField',
+            value: settings.descriptionField,
+            options: {'': ''}|merge(fieldOptions),
+            errors: settings.getErrors('descriptionField')
+        }) }}
+
+    </div>
+    <div id="tab-settings" class="hidden">
+        <h2>{{ 'Settings'|t('skroutz-xml-feed-pro') }}</h2>
+
+        {{ forms.textField({
+            label: 'Tax Rate'|t('skroutz-xml-feed-pro'),
+            instructions: 'Tax rate as a percentage of the product price.'|t('skroutz-xml-feed-pro'),
+            id: 'taxRate',
+            name: 'taxRate',
+            value: settings.taxRate,
+            errors: settings.getErrors('taxRate')
+        }) }}
+
+        {% if isCommerceInstalled %}
+            {{ forms.selectField({
+                label: 'Currency'|t('skroutz-xml-feed-pro'),
+                id: 'currency',
+                name: 'currency',
+                value: settings.currency,
+                options: {'': ''}|merge(settings.currencyOptions),
+                errors: settings.getErrors('currency')
+            }) }}
+        {% endif %}
+
+        {{ forms.lightswitchField({
+            label: 'Include Out of Stock Products'|t('skroutz-xml-feed-pro'),
+            id: 'includeOutOfStockElements',
+            name: 'includeOutOfStockElements',
+            on: settings.includeOutOfStockElements,
+            errors: settings.getErrors('includeOutOfStockElements')
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Append Color to ID'|t('skroutz-xml-feed-pro'),
+            id: 'appendColorToId',
+            name: 'appendColorToId',
+            on: settings.appendColorToId,
+            errors: settings.getErrors('appendColorToId')
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Append Color to Name'|t('skroutz-xml-feed-pro'),
+            id: 'appendColorToName',
+            name: 'appendColorToName',
+            on: settings.appendColorToName,
+            errors: settings.getErrors('appendColorToName')
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Append Color to Url'|t('skroutz-xml-feed-pro'),
+            id: 'appendColorToUrl',
+            name: 'appendColorToUrl',
+            on: settings.appendColorToUrl,
+            errors: settings.getErrors('appendColorToUrl')
+        }) }}
+
+        {% if isCommerceInstalled %}
+            <h3>{{ 'Variants'|t('skroutz-xml-feed-pro') }}</h3>
+
+            {{ forms.lightswitchField({
+                label: 'Include Out of Stock Variants'|t('skroutz-xml-feed-pro'),
+                id: 'includeOutOfStockVariants',
+                name: 'includeOutOfStockVariants',
+                on: settings.includeOutOfStockVariants,
+                errors: settings.getErrors('includeOutOfStockVariants')
+            }) }}
+
+            {{ forms.selectField({
+                label: 'Price Type for Variants'|t('skroutz-xml-feed-pro'),
+                id: 'variantPriceType',
+                name: 'variantPriceType',
+                value: settings.variantPriceType,
+                options: settings.variantPriceTypeOptions,
+                errors: settings.getErrors('variantPriceType')
+            }) }}
+        {% endif %}
+
+    </div>
+    <div id="tab-filters" class="hidden">
+        <h2>{{ 'Entries'|t('skroutz-xml-feed-pro') }}</h2>
+
+        {{ forms.checkboxGroupField({
+            label: 'Status'|t('skroutz-xml-feed-pro'),
+            id: 'entryStatusFilter',
+            name: 'entryStatusFilter',
+            values: settings.entryStatusFilter,
+            options: settings.statusFilterOptions,
+            errors: settings.getErrors('entryStatusFilter')
+        }) }}
+
+        {% if settings.entryTypeFilterOptions|length %}
+            {{ forms.checkboxGroupField({
+                label: 'Type'|t('skroutz-xml-feed-pro'),
+                id: 'entryTypeFilter',
+                name: 'entryTypeFilter',
+                values: settings.entryTypeFilter,
+                options: settings.entryTypeFilterOptions,
+                errors: settings.getErrors('entryTypeFilter')
+            }) }}
+        {% endif %}
+
+        {{ forms.elementSelectField({
+            label: 'Category'|t('skroutz-xml-feed-pro'),
+            id: 'entryCategoryFilter',
+            name: 'entryCategoryFilter',
+            elements: (settings.entryCategoryFilter|length ? craft.categories.id(settings.entryCategoryFilter).all() : []),
+            elementType: 'craft\\elements\\Category',
+            errors: settings.getErrors('entryCategoryFilter'),
+        }) }}
+
+        {% if isCommerceInstalled %}
+            <hr>
+
+            <h2>{{ 'Products'|t('skroutz-xml-feed-pro') }}</h2>
+
+            {{ forms.checkboxGroupField({
+                label: 'Status'|t('skroutz-xml-feed-pro'),
+                id: 'productStatusFilter',
+                name: 'productStatusFilter',
+                values: settings.productStatusFilter,
+                options: settings.statusFilterOptions,
+                errors: settings.getErrors('productStatusFilter')
+            }) }}
+
+            {% if settings.productTypeFilterOptions|length %}
+                {{ forms.checkboxGroupField({
+                    label: 'Type'|t('skroutz-xml-feed-pro'),
+                    id: 'productTypeFilter',
+                    name: 'productTypeFilter',
+                    values: settings.productTypeFilter,
+                    options: settings.productTypeFilterOptions,
+                    errors: settings.getErrors('productTypeFilter')
+                }) }}
+            {% endif %}
+
+            {{ forms.elementSelectField({
+                label: 'Category'|t('skroutz-xml-feed-pro'),
+                id: 'productCategoryFilter',
+                name: 'productCategoryFilter',
+                elements: (settings.productCategoryFilter|length ? craft.categories.id(settings.productCategoryFilter).all() : []),
+                elementType: 'craft\\elements\\Category',
+                errors: settings.getErrors('productCategoryFilter'),
+            }) }}
+
+            {{ forms.checkboxField({
+                label: 'Available for Purcahse'|t('skroutz-xml-feed-pro'),
+                id: 'productAvailableForPurchaseFilter',
+                name: 'productAvailableForPurchaseFilter',
+                checked: settings.productAvailableForPurchaseFilter,
+                errors: settings.getErrors('productAvailableForPurchaseFilter')
+            }) }}
+        {% endif %}
+
+    </div>
+{% endnamespace %}
