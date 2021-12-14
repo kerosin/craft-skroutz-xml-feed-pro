@@ -1,5 +1,13 @@
 # Skroutz Xml Feed Pro Changelog
 
+## 1.2.0 - 2021-12-15
+### Added
+- Added filters
+- Added code improvements
+
+### Changed
+- Updated plugin settings UI
+
 ## 1.1.2 - 2021-11-30
 ### Fixed
 - Fixed translation issue in the admin settings
