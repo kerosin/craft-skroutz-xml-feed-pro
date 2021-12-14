@@ -9,6 +9,7 @@
 namespace kerosin\skroutzxmlfeedpro\variables;
 
 use kerosin\skroutzxmlfeedpro\SkroutzXmlFeedPro;
+use kerosin\skroutzxmlfeedpro\services\SkroutzXmlFeedProService;
 
 use craft\base\Element;
 
@@ -31,7 +32,7 @@ class SkroutzXmlFeedProVariable
      */
     public function generateFeed(array $elements): void
     {
-        SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->generateFeed($elements);
+        $this->getService()->generateFeed($elements);
     }
 
     /**
@@ -43,9 +44,7 @@ class SkroutzXmlFeedProVariable
      */
     public function elementFieldValue(Element $element, ?string $field, $customValue = null)
     {
-        return SkroutzXmlFeedPro::$plugin
-            ->skroutzXmlFeedProService
-            ->getElementFieldValue($element, $field, $customValue);
+        return $this->getService()->getElementFieldValue($element, $field, $customValue);
     }
 
     /**
@@ -55,9 +54,7 @@ class SkroutzXmlFeedProVariable
      */
     public function elementInstockFieldValue(Element $element)
     {
-        return SkroutzXmlFeedPro::$plugin
-            ->skroutzXmlFeedProService
-            ->getElementInstockFieldValue($element);
+        return $this->getService()->getElementInstockFieldValue($element);
     }
 
     /**
@@ -67,7 +64,7 @@ class SkroutzXmlFeedProVariable
      */
     public function elementColors(Element $element): array
     {
-        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->getElementColors($element);
+        return $this->getService()->getElementColors($element);
     }
 
     /**
@@ -76,7 +73,7 @@ class SkroutzXmlFeedProVariable
      */
     public function isCustomValue(?string $value): bool
     {
-        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->isCustomValue($value);
+        return $this->getService()->isCustomValue($value);
     }
 
     /**
@@ -85,7 +82,7 @@ class SkroutzXmlFeedProVariable
      */
     public function isUseWeightUnit(?string $value): bool
     {
-        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->isUseWeightUnit($value);
+        return $this->getService()->isUseWeightUnit($value);
     }
 
     /**
@@ -94,7 +91,7 @@ class SkroutzXmlFeedProVariable
      */
     public function isUseInstock(?string $value): bool
     {
-        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->isUseInstock($value);
+        return $this->getService()->isUseInstock($value);
     }
 
     /**
@@ -103,7 +100,7 @@ class SkroutzXmlFeedProVariable
      */
     public function isUseStockField(?string $value): bool
     {
-        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->isUseStockField($value);
+        return $this->getService()->isUseStockField($value);
     }
 
     /**
@@ -112,6 +109,18 @@ class SkroutzXmlFeedProVariable
      */
     public function isElementInStock(?string $value): bool
     {
-        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService->isElementInStock($value);
+        return $this->getService()->isElementInStock($value);
+    }
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return SkroutzXmlFeedProService
+     * @since 1.2.0
+     */
+    protected function getService(): SkroutzXmlFeedProService
+    {
+        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService;
     }
 }

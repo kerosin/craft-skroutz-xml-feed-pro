@@ -48,10 +48,7 @@ class FeedController extends Controller
         $response->format = Response::FORMAT_RAW;
         $response->getHeaders()->set('Content-Type', 'application/xml; charset=UTF-8');
 
-        /** @var SkroutzXmlFeedProService $skroutzXmlFeedProService */
-        $skroutzXmlFeedProService = SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService;
-
-        return $skroutzXmlFeedProService->getEntriesFeedXml();
+        return $this->getService()->getEntriesFeedXml();
     }
 
     /**
@@ -64,9 +61,18 @@ class FeedController extends Controller
         $response->format = Response::FORMAT_RAW;
         $response->getHeaders()->set('Content-Type', 'application/xml; charset=UTF-8');
 
-        /** @var SkroutzXmlFeedProService $skroutzXmlFeedProService */
-        $skroutzXmlFeedProService = SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService;
+        return $this->getService()->getProductsFeedXml();
+    }
 
-        return $skroutzXmlFeedProService->getProductsFeedXml();
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return SkroutzXmlFeedProService
+     * @since 1.2.0
+     */
+    protected function getService(): SkroutzXmlFeedProService
+    {
+        return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService;
     }
 }
