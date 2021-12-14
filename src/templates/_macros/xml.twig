@@ -15,11 +15,11 @@
  */
 #}
 {% macro element(config) %}
+    {% set tag = config.tag ?? null %}
     {% set value = config.value is defined ? config.value : false %}
     {% set element = config.element ?? null %}
     {% set field = config.field ?? null %}
     {% set customValue = config.customValue ?? null %}
-    {% set tag = config.tag ?? null %}
     {% set multiple = config.multiple ?? false %}
     {% set separator = config.separator ?? ',' %}
     {% set suffix = config.suffix ?? null %}
