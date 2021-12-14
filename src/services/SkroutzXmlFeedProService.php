@@ -9,6 +9,7 @@
 namespace kerosin\skroutzxmlfeedpro\services;
 
 use kerosin\skroutzxmlfeedpro\SkroutzXmlFeedPro;
+use kerosin\skroutzxmlfeedpro\models\Settings;
 
 use Craft;
 use craft\base\Component;
@@ -86,13 +87,11 @@ class SkroutzXmlFeedProService extends Component
      */
     public function getFeedXml(array $elements): string
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
-
         return Craft::$app->getView()->renderTemplate(
             'skroutz-xml-feed-pro/_feed',
             [
                 'elements' => $elements,
-                'settings' => $settings,
+                'settings' => $this->getSettings(),
             ],
             View::TEMPLATE_MODE_CP
         );
@@ -252,7 +251,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function getElementInstockFieldValue(Element $element)
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
         $result = $settings::INSTOCK_IN_STOCK;
 
         if (
@@ -283,7 +282,7 @@ class SkroutzXmlFeedProService extends Component
     public function getElementColors(Element $element): array
     {
         $result = [];
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
 
         if ($settings->colorField == null) {
             return $result;
@@ -538,9 +537,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isCustomValue(?string $value): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_CUSTOM_VALUE;
+        return $value == $this->getSettings()::OPTION_CUSTOM_VALUE;
     }
 
     /**
@@ -549,9 +546,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isUseWeightUnit(?string $value): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_USE_WEIGHT_UNIT;
+        return $value == $this->getSettings()::OPTION_USE_WEIGHT_UNIT;
     }
 
     /**
@@ -560,9 +555,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isUseInstock(?string $value): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_USE_INSTOCK;
+        return $value == $this->getSettings()::OPTION_USE_INSTOCK;
     }
 
     /**
@@ -571,9 +564,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isUseStockField(?string $value): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_USE_STOCK_FIELD;
+        return $value == $this->getSettings()::OPTION_USE_STOCK_FIELD;
     }
 
     /**
@@ -582,9 +573,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isElementInStock(?string $value): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
-
-        return $value == null || $value == $settings::INSTOCK_IN_STOCK;
+        return $value == null || $value == $this->getSettings()::INSTOCK_IN_STOCK;
     }
 
     /**
@@ -594,7 +583,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function hasField(Element $element, string $field): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
 
         return $settings->{$field} != null && isset($element->{$settings->{$field}});
     }
@@ -604,7 +593,7 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isVariantPriceTypeDefault(): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
 
         return $settings->variantPriceType == $settings::VARIANT_PRICE_TYPE_DEFAULT;
     }
@@ -615,8 +604,18 @@ class SkroutzXmlFeedProService extends Component
      */
     public function isSkipOutOfStockVariants(string $stock = null): bool
     {
-        $settings = SkroutzXmlFeedPro::$plugin->getSettings();
+        return !$this->getSettings()->includeOutOfStockVariants && !$this->isElementInStock($stock);
+    }
 
-        return !$settings->includeOutOfStockVariants && !$this->isElementInStock($stock);
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return Settings
+     * @since 1.2.0
+     */
+    protected function getSettings(): Settings
+    {
+        return SkroutzXmlFeedPro::$plugin->getSettings();
     }
 }
