@@ -44,9 +44,7 @@ class FeedController extends Controller
      */
     public function actionEntries()
     {
-        $response = Craft::$app->getResponse();
-        $response->format = Response::FORMAT_RAW;
-        $response->getHeaders()->set('Content-Type', 'application/xml; charset=UTF-8');
+        $this->setXmlResponseHeader();
 
         return $this->getService()->getEntriesFeedXml();
     }
@@ -57,9 +55,7 @@ class FeedController extends Controller
      */
     public function actionProducts()
     {
-        $response = Craft::$app->getResponse();
-        $response->format = Response::FORMAT_RAW;
-        $response->getHeaders()->set('Content-Type', 'application/xml; charset=UTF-8');
+        $this->setXmlResponseHeader();
 
         return $this->getService()->getProductsFeedXml();
     }
@@ -74,5 +70,16 @@ class FeedController extends Controller
     protected function getService(): SkroutzXmlFeedProService
     {
         return SkroutzXmlFeedPro::$plugin->skroutzXmlFeedProService;
+    }
+
+    /**
+     * @return void
+     * @since 1.3.0
+     */
+    protected function setXmlResponseHeader(): void
+    {
+        $response = Craft::$app->getResponse();
+        $response->format = Response::FORMAT_RAW;
+        $response->getHeaders()->set('Content-Type', 'application/xml; charset=UTF-8');
     }
 }
