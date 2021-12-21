@@ -220,6 +220,8 @@
             errors: settings.getErrors('mpnField')
         }) }}
 
+        <hr>
+
         <h2>{{ 'Optional Fields'|t('skroutz-xml-feed-pro') }}</h2>
 
         {{ forms.selectField({
@@ -336,6 +338,35 @@
             value: settings.descriptionField,
             options: {'': ''}|merge(fieldOptions),
             errors: settings.getErrors('descriptionField')
+        }) }}
+
+        <hr>
+
+        <h2>{{ 'Custom Tags'|t('skroutz-xml-feed-pro') }}</h2>
+
+        {{ forms.editableTableField({
+            id: 'customTags',
+            name: 'customTags',
+            cols: {
+                name: {
+                    type: 'singleline',
+                    heading: 'Name'|t('skroutz-xml-feed-pro')
+                },
+                field: {
+                    type: 'select',
+                    heading: 'Field'|t('skroutz-xml-feed-pro'),
+                    options: [{
+                        label: 'Custom Value'|t('skroutz-xml-feed-pro'),
+                        value: constant('OPTION_CUSTOM_VALUE', settings)
+                    }]|merge(fieldOptions)
+                },
+                customValue: {
+                    type: 'singleline',
+                    heading: 'Custom Value'|t('skroutz-xml-feed-pro')
+                }
+            },
+            rows: settings.customTags,
+            errors: settings.getErrors('customTags')
         }) }}
 
     </div>
