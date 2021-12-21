@@ -2,7 +2,7 @@
     "name": "kerosin/craft-skroutz-xml-feed-pro",
     "description": "Skroutz Xml Feed for Craft CMS.",
     "type": "craft-plugin",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "keywords": [
         "craft",
         "cms",
